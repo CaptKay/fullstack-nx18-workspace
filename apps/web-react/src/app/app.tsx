@@ -1,5 +1,7 @@
+
 import { useEffect, useState } from 'react';
 import type { Project } from '@fullstack-nx18-workspace/domain-model';
+import { fetchProjects } from '@fullstack-nx18-workspace/api-client';
 
 export function App() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -7,39 +9,90 @@ export function App() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('http://localhost:3000/projects')
-      .then((res) => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return res.json();
-      })
-      .then((data: Project[]) => {
-        setProjects(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setError('Failed to load projects');
-        setLoading(false);
-      });
+    let cancelled = false;
+
+    async function load() {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const data = await fetchProjects();
+        if (!cancelled) {
+          setProjects(data);
+        }
+      } catch (err) {
+        console.error('Failed to load projects:', err);
+        if (!cancelled) {
+          setError('Could not load projects. Please try again.');
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+
+    load();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return (
-    <div style={{ padding: '2rem', fontFamily: 'system-ui, sans-serif' }}>
-      <h1>Nx 18 Fullstack Workspace</h1>
+    <main style={{ padding: '1.5rem', fontFamily: 'system-ui, sans-serif' }}>
+      <h1>Fullstack Nx18 Workspace – Projects</h1>
 
       {loading && <p>Loading projects...</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
 
-      {!loading && !error && (
-        <ul>
+      {error && (
+        <p style={{ color: 'red' }}>
+          {error}
+        </p>
+      )}
+
+      {!loading && !error && projects.length === 0 && (
+        <p>No projects found. Try running <code>npm run db:seed</code>.</p>
+      )}
+
+      {!loading && !error && projects.length > 0 && (
+        <ul style={{ marginTop: '1rem', listStyle: 'none', padding: 0 }}>
           {projects.map((project) => (
-            <li key={project.id}>
-              <strong>{project.name}</strong> – {project.status} | {project.description}
+            <li
+              key={project.id}
+              style={{
+                padding: '0.75rem 1rem',
+                marginBottom: '0.5rem',
+                borderRadius: '0.5rem',
+                border: '1px solid #e5e7eb',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              <div>
+                <strong>{project.name}</strong>
+                <div style={{ fontSize: '0.85rem', color: '#6b7280' }}>
+                  Created: {new Date(project.createdAt).toLocaleString()}
+                </div>
+              </div>
+              <span
+                style={{
+                  padding: '0.25rem 0.5rem',
+                  borderRadius: '999px',
+                  fontSize: '0.75rem',
+                  border: '1px solid #d1d5db',
+                  background:
+                    project.status === 'ACTIVE' ? '#dcfce7' : '#e5e7eb',
+                }}
+              >
+                {project.status}
+              </span>
             </li>
           ))}
         </ul>
       )}
-    </div>
+    </main>
   );
 }
 

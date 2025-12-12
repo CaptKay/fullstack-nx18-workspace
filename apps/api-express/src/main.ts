@@ -7,7 +7,7 @@ import {
 } from '@fullstack-nx18-workspace/domain-model';
 import { getAllProjects } from '@fullstack-nx18-workspace/db';
 
-const host = process.env.HOST ?? 'localhost';
+const host = process.env.HOST ?? '0.0.0.0'; //change back to localhost
 const port = process.env.PORT ? Number(process.env.PORT) : 3000;
 
 const app = express();
@@ -35,7 +35,7 @@ app.get('/projects', async (_req, res) => {
   }
 });
 
-app.get('/', (req, res) => {
+app.get('/', (_req, res) => {
   res.send({ message: 'Hello API' });
 });
 
