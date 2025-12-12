@@ -14,7 +14,11 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@fullstack-nx18-workspace/domain-model": [
+        "libs/domain-model/src/index.ts"
+      ]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }
