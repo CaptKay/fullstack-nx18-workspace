@@ -2,6 +2,8 @@
 import { useEffect, useState } from 'react';
 import type { Project } from '@fullstack-nx18-workspace/domain-model';
 import { fetchProjects } from '@fullstack-nx18-workspace/api-client';
+import { formatDateTime } from '@fullstack-nx18-workspace/utils';
+
 
 export function App() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -73,7 +75,7 @@ export function App() {
               <div>
                 <strong>{project.name}</strong>
                 <div style={{ fontSize: '0.85rem', color: '#6b7280' }}>
-                  Created: {new Date(project.createdAt).toLocaleString()}
+                  Created: {formatDateTime(project.createdAt)}
                 </div>
               </div>
               <span

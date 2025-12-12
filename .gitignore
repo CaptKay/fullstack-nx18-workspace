@@ -39,3 +39,7 @@ testem.log
 Thumbs.db
 
 .nx/cache
+
+# Prisma local DBs
+*.db
+libs/db/prisma/dev.db

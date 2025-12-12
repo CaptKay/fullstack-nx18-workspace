@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import { requestLogger, formatDateTime } from '@fullstack-nx18-workspace/utils';
 
 import {
   Project,
@@ -18,12 +19,21 @@ app.use(
   })
 );
 
-app.get('/health', (_req, res) => {
+app.use(express.json());
+app.use(requestLogger);
+
+
+
+app.get('/health', (req, res) => {
+  const now = new Date();
+
   res.json({
     status: 'ok',
-    timestamp: new Date().toISOString(),
+    timestamp: now.toISOString(),
+    friendlyTime: formatDateTime(now),
   });
 });
+
 
 app.get('/projects', async (_req, res) => {
   try {

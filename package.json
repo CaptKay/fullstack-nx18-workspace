@@ -3,7 +3,17 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "db:seed": "node libs/db/seed.cjs"
+    "db:seed": "node libs/db/seed.cjs",
+    
+    "web:dev": "nx serve web-react",
+    "api:dev": "nx serve api-express",
+
+    "api:docker:build": "docker build -t fullstack-api-express .",
+    "api:docker:run": "docker run --name fullstack-api-express-container -p 3000:3000 fullstack-api-express",
+    "api:docker:stop": "docker stop fullstack-api-express-container && docker rm fullstack-api-express-container",
+
+    "build:all": "nx run-many --target=build --all",
+    "test:all": "nx run-many --target=test --all"
   },
   "private": true,
   "dependencies": {
