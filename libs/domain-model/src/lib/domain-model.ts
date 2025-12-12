@@ -3,7 +3,7 @@ export type ProjectStatus = 'ACTIVE' | 'ARCHIVED';
 export interface Project {
   id: string;
   name: string;
-  description: string;
+  description?: string;
   status: ProjectStatus;
   createdAt: string;
 }

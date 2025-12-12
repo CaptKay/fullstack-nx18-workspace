@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@fullstack-nx18-workspace/db": ["libs/db/src/index.ts"],
       "@fullstack-nx18-workspace/domain-model": [
         "libs/domain-model/src/index.ts"
       ]
