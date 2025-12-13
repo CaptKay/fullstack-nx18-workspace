@@ -37,7 +37,7 @@
       "options": {
         "targetName": "test"
       },
-      "exclude": ["api-express-e2e/**/*"]
+      "exclude": ["api-express-e2e/**/*", "apps/api-nest-e2e/**/*"]
     },
     {
       "plugin": "@nx/expo/plugin",
