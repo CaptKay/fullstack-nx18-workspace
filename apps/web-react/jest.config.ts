@@ -8,4 +8,8 @@ export default {
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   coverageDirectory: '../../coverage/apps/web-react',
+  testPathIgnorePatterns: [
+    '/node_modules/',
+    '<rootDir>/e2e/',        // 👈 ignore Playwright specs
+  ],
 };
