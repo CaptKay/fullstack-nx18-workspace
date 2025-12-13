@@ -1,13 +1,8 @@
-import { getGreeting } from '../support/app.po';
+describe('mobile-expo web', () => {
+  it('shows the main screen', () => {
+    cy.visit('/');
 
-describe('mobile-expo-e2e', () => {
-  beforeEach(() => cy.visit('/'));
-
-  it('should display welcome message', () => {
-    // Custom command example, see `../support/commands.ts` file
-    cy.login('my-email@something.com', 'myPassword');
-
-    // Function helper example, see `../support/app.po.ts` file
-    getGreeting().contains(/Welcome/);
+    // Update text to something you actually see in App.tsx
+    cy.contains(/Fullstack Nx18 Workspace – Mobile Projects/i).should('exist');
   });
 });
