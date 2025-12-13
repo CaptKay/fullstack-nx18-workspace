@@ -1,0 +1,29 @@
+name: Build api-express Docker image
+
+on:
+  workflow_dispatch:   # manual button in the Actions tab
+
+jobs:
+  docker-api-express:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build Docker image (local only)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: false
+          tags: fullstack-api-express:ci-test

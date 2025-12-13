@@ -10,7 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      # So all Nx commands know they are in CI
       NX_NON_INTERACTIVE: true
 
     steps:
@@ -29,28 +28,29 @@ jobs:
       - name: Show Nx projects
         run: npx nx show projects
 
-      # 1) LINT ALL
+      # 1) Lint
       - name: Lint all projects
         run: npx nx run-many --target=lint --all --parallel=3
 
-      # 2) UNIT TESTS (Jest)
-      - name: Run unit tests for all projects
+      # 2) Unit tests (all Jest projects)
+      - name: Run unit tests
         run: npm run test:all
 
-      # 3) E2E – Playwright for web-react
+      # 3) Playwright E2E for web-react
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
+
       - name: Run web-react Playwright E2E
         run: npx nx run web-react:e2e
 
-      # 4) E2E – Cypress for Angular + Expo web
+      # 4) Cypress E2E for Angular & Expo web
       - name: Run Angular E2E (Cypress)
         run: npx nx run web-angular:e2e
 
       - name: Run Expo web E2E (Cypress)
         run: npx nx run mobile-expo-e2e:e2e
 
-      # 5) BUILD main apps (prod builds)
+      # 5) Build main apps
       - name: Build web-react
         run: npx nx build web-react --configuration=production
 
