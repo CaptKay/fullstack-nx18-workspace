@@ -1,0 +1,31 @@
+<main style="padding: 1.5rem; font-family: system-ui, sans-serif">
+  <h1>{{ title }}</h1>
+  <p>This is the Angular client using the same API and domain model.</p>
+
+  <section *ngIf="loading">
+    <p>Loading projects...</p>
+  </section>
+
+  <section *ngIf="error">
+    <p style="color: darkred">{{ error }}</p>
+  </section>
+
+  <section *ngIf="!loading && !error">
+    <ul *ngIf="projects.length > 0; else noProjects">
+      <li *ngFor="let project of projects">
+        <strong>{{ project.name }}</strong>
+        <span> — {{ project.status }}</span>
+        <div style="font-size: 0.85rem; color: #555">
+          {{ project.description }}
+        </div>
+        <div style="font-size: 0.8rem; color: #777">
+          Created: {{ project.createdAt | date: 'medium' }}
+        </div>
+      </li>
+    </ul>
+
+    <ng-template #noProjects>
+      <p>No projects yet. Try seeding or creating some.</p>
+    </ng-template>
+  </section>
+</main>
