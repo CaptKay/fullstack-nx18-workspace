@@ -1,0 +1,10 @@
+{
+  "name": "mobile-expo-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/mobile-expo-e2e/src",
+  "tags": [],
+  "implicitDependencies": ["mobile-expo"],
+  "// targets": "to see all targets run: nx show project mobile-expo-e2e --web",
+  "targets": {}
+}

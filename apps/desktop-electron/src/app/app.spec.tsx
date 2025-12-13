@@ -14,12 +14,16 @@ describe('App', () => {
     expect(baseElement).toBeTruthy();
   });
 
-  it('should have a greeting as the title', () => {
-    const { getByText } = render(
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    );
-    expect(getByText(/Welcome desktop-electron/gi)).toBeTruthy();
-  });
+it('should have a greeting as the title', () => {
+  const { getByText } = render(
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  );
+
+  // Match the actual title in App.tsx
+  expect(
+    getByText(/Fullstack Nx18 Desktop – Projects/i)
+  ).toBeTruthy();
+});
 });

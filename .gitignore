@@ -43,3 +43,22 @@ Thumbs.db
 # Prisma local DBs
 *.db
 libs/db/prisma/dev.db
+
+# Expo
+node_modules/
+.expo/
+.yarn/
+dist/
+npm-debug.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+cache/
+
+dist/
+.nx/cache/
+node_modules/
