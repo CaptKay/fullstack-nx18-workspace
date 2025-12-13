@@ -4,7 +4,6 @@ import { requestLogger, formatDateTime } from '@fullstack-nx18-workspace/utils';
 
 import {
   Project,
-  sampleProjects,
 } from '@fullstack-nx18-workspace/domain-model';
 import { getAllProjects } from '@fullstack-nx18-workspace/db';
 
