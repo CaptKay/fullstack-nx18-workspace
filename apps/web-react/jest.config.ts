@@ -10,6 +10,6 @@ export default {
   coverageDirectory: '../../coverage/apps/web-react',
   testPathIgnorePatterns: [
     '/node_modules/',
-    '<rootDir>/e2e/',        // 👈 ignore Playwright specs
+    '<rootDir>/e2e/'
   ],
 };
