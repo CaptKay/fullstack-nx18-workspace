@@ -4,16 +4,16 @@
   "license": "MIT",
   "scripts": {
     "db:seed": "node libs/db/seed.cjs",
-    
     "web:dev": "nx serve web-react",
     "api:dev": "nx serve api-express",
-
     "api:docker:build": "docker build -t fullstack-api-express .",
     "api:docker:run": "docker run --name fullstack-api-express-container -p 3000:3000 fullstack-api-express",
     "api:docker:stop": "docker stop fullstack-api-express-container && docker rm fullstack-api-express-container",
-
     "build:all": "nx run-many --target=build --all",
-    "test:all": "nx run-many --target=test --all"
+    "test:all": "nx run-many --target=test --all",
+    "desktop:dev": "concurrently -k \"nx serve desktop-electron\" \"wait-on http://localhost:4300 && electron apps/desktop-electron/electron-main.cjs\"",
+   "desktop:build": "nx build desktop-electron",
+"desktop:prod": "npm run desktop:build && concurrently -k \"npx serve -s dist/apps/desktop-electron -l 4300\" \"wait-on http://localhost:4300 && cross-env NODE_ENV=production electron apps/desktop-electron/electron-main.cjs\""
   },
   "private": true,
   "dependencies": {
@@ -24,6 +24,7 @@
     "express": "~4.18.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-router-dom": "6.11.2",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
@@ -54,6 +55,9 @@
     "@typescript-eslint/eslint-plugin": "^7.3.0",
     "@typescript-eslint/parser": "^7.3.0",
     "babel-jest": "^29.4.1",
+    "concurrently": "^9.2.1",
+    "cross-env": "^10.1.0",
+    "electron": "^39.2.7",
     "esbuild": "^0.19.2",
     "eslint": "~8.57.0",
     "eslint-config-prettier": "^9.0.0",
@@ -68,9 +72,11 @@
     "prettier": "^2.6.2",
     "prisma": "^6.2.1",
     "react-refresh": "^0.10.0",
+    "serve": "^14.2.5",
     "ts-jest": "^29.1.0",
     "ts-node": "10.9.1",
     "typescript": "~5.4.2",
+    "wait-on": "^9.0.3",
     "webpack-cli": "^5.1.4"
   }
 }
