@@ -20,7 +20,9 @@
     "e2e:web-react": "nx e2e web-react-e2e",
     "e2e:web-angular": "nx e2e web-angular-e2e",
     "e2e:mobile": "nx e2e mobile-expo-e2e",
-    "e2e:all": "nx run-many --target=e2e --all"
+    "e2e:all": "nx run-many --target=e2e --all",
+    "test:web": "nx run web-react:test && nx run web-angular:test",
+    "test:e2e": "nx run web-react:e2e && nx run web-angular:e2e"
   },
   "private": true,
   "dependencies": {

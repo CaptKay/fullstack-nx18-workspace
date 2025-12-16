@@ -1,0 +1,119 @@
+name: Nx Monorepo CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  NODE_VERSION: 22
+
+jobs:
+  ci:
+    name: Unit + Library Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run all unit tests
+        run: npm run test:all
+
+  e2e:
+    name: E2E Tests (React + Angular)
+    needs: ci
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Run React E2E (Playwright)
+        run: npx nx run web-react:e2e --ci
+
+      - name: Run Angular E2E (Cypress)
+        run: npx nx run web-angular:e2e --ci
+
+  deploy_web_react:
+    name: Deploy web-react (CD skeleton)
+    needs: [ci, e2e]
+    runs-on: ubuntu-latest
+    # Only deploy on direct pushes to main, not on PRs
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build web-react for production
+        run: npx nx build web-react --configuration=production
+
+      # ----- CD HOOK (TO FILL IN WITH YOUR PROVIDER) -----
+      # Replace this placeholder step with the command for your hosting provider.
+      # Examples:
+      # - Netlify: netlify deploy --prod --dir=dist/apps/web-react
+      # - Vercel:  npx vercel deploy --prod dist/apps/web-react
+      # - Static S3/FTP: aws s3 sync ..., or rsync, or scp, etc.
+      - name: Deploy web-react to Netlify
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: |
+          npx netlify deploy \
+            --prod \
+            --site="$NETLIFY_SITE_ID" \
+            --dir="dist/apps/web-react"
+
+      - name: Deploy web-angular to Vercel
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_WEB_ANGULAR_PROJECT_ID }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: npx vercel --prod --yes
+
+      - name: Setup Flyctl
+        if: github.ref == 'refs/heads/main'
+        uses: superfly/flyctl-actions/setup-flyctl@v1
+
+      - name: Deploy api-express to Fly.io
+        if: github.ref == 'refs/heads/main'
+        working-directory: apps/api-express
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        run: |
+          flyctl deploy --config ./fly.toml --remote-only
+
+
+      
